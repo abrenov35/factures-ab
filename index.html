@@ -105,7 +105,7 @@ input,select,textarea{font-family:inherit;}
 <div id="app"></div>
 
 <script>
-const GAS_URL = "VOTRE_GAS_URL"; // À remplacer
+const GAS_URL = "https://script.google.com/macros/s/AKfycbylgghzjunIpRJOe8_xmbIajmRUhMtMrBZRCiDMOYNOXTd4asnaoIRnY8cUX8wuBdZ2/exec";
 const DROPBOX_TOKEN = "sl.u.AGgCoJTBGiVs8vFV9O5EztSptl_y2zPD0o3DfXRP_yjE5RWRYGVPU1ZegZcEZeGquoWsB3sDk6lmVdBCOJNjKkmDEFwQ_-Ky5GCU6PEXEUG8jxeA5otdR9-vGy_kg8MCSYOZlbzXGqsl21ASZeKOEsshFYTym8odPajQzBIPsax-bAT8kDQvutI4A6Fr84sT1u0CA0UbxMurPtCJRPOUq1ykEdvy154oB39YdeJi2G9MmO8aq4PMDPYD0r5ud_xrLCmL_WEqbAmnUuPsu_8PDQMzB_Yu76fs12dn5zSef4E4vpZ0OJyufFyn67rxzMT3TR7XCeZRlWWsWokRJvzwEeQatXwJJKENpNPR5vaWpywa1fHfb5MLWOIDkPqOEfAaGHf28AJHESaUvnRfWp43fDibOEY8wWQ5NP4wHi-wCD9akm7ZenEXiiy8paXlAX3DvJeE3j7LHb-db66u9SEMwdfNWGIAzBWSo_hp_HF-TA1Wrg6ifk7p2rbk-FhwuNFAVv2LDE1KOfzrh7guOHOhcmVx1xuB6b2VQE5N1gC2-uhMDwjianMjpHNbe3OC1lF-YPxTkSgs8UgIihrTdUFirwapuP2PxsZNiQetbktOronnlvr_zoDiSfUjPmwgrS4daQR2RltYJ6GH94bvv3BazuegmgGOB27jitm1wZ8N-xYPtg5xQeUS2n6S6UEuUnrbNOAXLz5_bPbqRfkltudYPxXfNmrsw60q5jUD2tB_NHstS8SLnuLmaJYCtWDRSxkhKYZdp4Rub7wxDC5w2wjvtnYG4FLeHNm8WFJK1bmkchl7syOSZGzL62aDPi9pqqDdpw2rIqpkkPc37-_cSVGIpkoQ7BIF2QSHeSiFkLU9JK9IU-itdXSNi9iB9sBVydVlfY-rg7iENSV5W7NlIuP1u4Tr-VEas-z1B4ir9VCJIVHuDJgyfrJLVJ771R8XJxHNl4R8O1S5xI0QuY5371WY0ykaDfd2bGFD5u6LU87y96KVIL6fRqCFFij5cUWQ08Mb0B7uhOJKCcgk_KLXZj_0aGGGNmhEhjgSXRARAWzFTACBUtaBlpuGMD_P2_ZUAT3I-Z7XgLRmLigjz3Nbo2Lamo0wzGeMd__X7kMc-Te34x4G7Kapgg6X_7_S6J8hkdJPBGmlg7nwBP956Y0dc0UOYLURRGA-bZoBT2igKGUZsxPMtojyfZ7Da7LiN5nkmtvg5T28ooEwrCBFkC9_nvti-nceEOkNsXUDkIItEKoZm-YrVIsfLiQ7Xw595tq2HdgS0z2OsjtIzUM2KAnllPvJ5y6Eb4qy7v4E04WQFCtXA20u7r7Oq8O6P2unXXQq5ghXK1iar12BwS-XsyHK-tG4MGugqV88abIa5RdkpfOjTo4qSVBtoct3G_77jyNLGH_8OgAFR6TTwBotQKSMH94RFWgllzlN3Nr0q5nT9xPl9X_xjTS5cbIa3MUm2N1l6DqlI8M";
 const DROPBOX_FOLDER = "/AB RENOV 35/FACTURES VENTES/FACTURES A CLASSER";
 const ANTHROPIC_KEY = ""; // Géré via GAS
@@ -404,7 +404,13 @@ async function validerEtEnvoyer() {
     };
     factures.push(entry);
 
-    // TODO: Sauvegarder dans Google Sheets via GAS
+    // Sauvegarder dans Google Sheets via GAS
+    const params = new URLSearchParams({
+      method:"POST", id:entry.id, fournisseur:entry.fournisseur,
+      date:entry.date, libelle:entry.libelle, montant:entry.montant,
+      filename:entry.filename, dropboxPath:entry.dropboxPath, ts:entry.ts
+    });
+    await fetch(GAS_URL+"?"+params.toString(), {method:"POST", redirect:"follow"});
     state="sent";
   } catch(e) {
     errMsg="Erreur envoi : "+e.message;
@@ -414,7 +420,15 @@ async function validerEtEnvoyer() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-render();
+async function init() {
+  try {
+    const r = await fetch(GAS_URL+"?method=GET", {redirect:"follow"});
+    const data = await r.json();
+    if(Array.isArray(data)) factures = data;
+  } catch(e) {}
+  render();
+}
+init();
 </script>
 </body>
 </html>
