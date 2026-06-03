@@ -325,7 +325,6 @@ async function analyser() {
     const resp = await fetch(GAS_URL+"?method=ANALYSE", {
       method:"POST",
       redirect:"follow",
-      headers:{"Content-Type":"application/json"},
       body: JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType})
     });
     const data = await resp.json();
@@ -387,7 +386,6 @@ async function validerEtEnvoyer() {
     // Sauvegarder dans Google Sheets via GAS
     await fetch(GAS_URL+"?method=POST", {
       method:"POST", redirect:"follow",
-      headers:{"Content-Type":"application/json"},
       body: JSON.stringify(entry)
     });
     state="sent";
