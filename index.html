@@ -246,7 +246,6 @@ function renderImport(app) {
         <div class="label">Libellé / Intitulé</div>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="f-libelle" class="form-input" type="text" value="${esc(extraction.libelle||"")}">
-          <button id="btn-clear-libelle" style="flex-shrink:0;width:36px;height:40px;border-radius:8px;border:1.5px solid #C8BFB5;background:#EAE4DC;font-size:18px;color:#6B7A8D;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
         </div>
       </div>`;
 
@@ -267,15 +266,19 @@ function renderImport(app) {
       if(fp) fp.textContent=buildFileName(ext);
     }));
 
-    // Bouton clear libellé
-    const btnClear = fcard.querySelector("#btn-clear-libelle");
-    if(btnClear) btnClear.onclick = () => {
+    // Ajouter bouton X sur le champ libellé
+    const libelleWrap = fcard.querySelector("#f-libelle").parentNode;
+    const btnX = document.createElement("button");
+    btnX.textContent = "✕";
+    btnX.style.cssText = "flex-shrink:0;width:36px;height:40px;border-radius:8px;border:1.5px solid #C8BFB5;background:#EAE4DC;font-size:18px;color:#6B7A8D;cursor:pointer";
+    btnX.onclick = () => {
       const inp = document.getElementById("f-libelle");
       if(inp) inp.value="";
       extraction.libelle="";
       const fp=document.getElementById("filename-preview");
       if(fp) fp.textContent=buildFileName(ext);
     };
+    libelleWrap.appendChild(btnX);
 
     const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
     const sendBtn=mk("button","btn btn-green btn-full");
