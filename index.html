@@ -246,7 +246,7 @@ function renderImport(app) {
         <div class="label">Libellé / Intitulé</div>
         <div style="display:flex;gap:6px;align-items:center">
           <input id="f-libelle" class="form-input" type="text" value="${esc(extraction.libelle||"")}">
-          <button onclick="document.getElementById('f-libelle').value='';extraction.libelle='';document.getElementById('filename-preview').textContent=buildFileName('${fileData.mimeType==='application/pdf'?'pdf':fileData.mimeType.split('/')[1]||'jpg'}');" style="flex-shrink:0;width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--bgsoft);font-size:16px;color:var(--muted);cursor:pointer">✕</button>
+          <button id="btn-clear-libelle" style="flex-shrink:0;width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--bgsoft);font-size:16px;color:var(--muted);cursor:pointer">✕</button>
         </div>
       </div>`;
 
@@ -266,6 +266,16 @@ function renderImport(app) {
       const fp=document.getElementById("filename-preview");
       if(fp) fp.textContent=buildFileName(ext);
     }));
+
+    // Bouton clear libellé
+    const btnClear = fcard.querySelector("#btn-clear-libelle");
+    if(btnClear) btnClear.onclick = () => {
+      const inp = document.getElementById("f-libelle");
+      if(inp) inp.value="";
+      extraction.libelle="";
+      const fp=document.getElementById("filename-preview");
+      if(fp) fp.textContent=buildFileName(ext);
+    };
 
     const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
     const sendBtn=mk("button","btn btn-green btn-full");
