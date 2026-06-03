@@ -199,12 +199,14 @@ function renderImport(app) {
     chg.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
     ovl.append(chg);wrap.append(img,ovl);prevCard.append(wrap);
   } else {
-    prevCard.innerHTML=`<div style="display:flex;align-items:center;gap:10px">
+    prevCard.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <span style="font-size:32px">📄</span>
-      <div><div style="font-weight:700;font-size:13px">${esc(fileData.name)}</div>
+      <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(fileData.name)}</div>
       <div style="font-size:11px;color:var(--muted)">PDF</div></div>
-      <button class="btn btn-soft" style="font-size:11px;height:30px;margin-left:auto" onclick="fileData=null;extraction=null;state='idle';render()">Changer</button>
-    </div>`;
+      <button class="btn btn-soft" style="font-size:11px;height:30px" onclick="fileData=null;extraction=null;state='idle';render()">Changer</button>
+    </div>
+    <a href="${fileData.dataUrl}" target="_blank" class="btn btn-soft" style="width:100%;text-decoration:none;font-size:12px;height:38px">👁 Ouvrir le PDF</a>
+    <iframe src="${fileData.dataUrl}" style="width:100%;height:300px;border:1px solid var(--border);border-radius:8px;margin-top:10px" title="Aperçu PDF"></iframe>`;
   }
   app.append(prevCard);
 
