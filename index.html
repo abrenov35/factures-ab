@@ -322,35 +322,15 @@ function handleFile(file) {
 async function analyser() {
   state="loading";errMsg="";render();
   try {
-    const isPdf = fileData.mimeType==="application/pdf";
-    const contentBlock = isPdf
-      ? {type:"document",source:{type:"base64",media_type:"application/pdf",data:fileData.base64}}
-      : {type:"image",source:{type:"base64",media_type:fileData.mimeType,data:fileData.base64}};
-
-    const resp = await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:500,
-        system:"Tu analyses des factures pour AB RENOV 35, entreprise de rénovation. Réponds UNIQUEMENT en JSON valide, sans markdown, sans explication.",
-        messages:[{role:"user",content:[
-          contentBlock,
-          {type:"text",text:`Analyse cette facture et extrais ces informations au format JSON exact:
-{
-  "fournisseur": "nom du fournisseur/émetteur",
-  "date": "date au format JJ-MM-AAAA",
-  "libelle": "intitulé court de la prestation ou des produits (max 30 caractères)",
-  "montant": "montant TTC en chiffres uniquement ex: 1250.00"
-}
-Si une info est absente, mets une chaîne vide. Réponds UNIQUEMENT avec le JSON.`}
-        ]}]
-      })
+    const params = new URLSearchParams({
+      method:"ANALYSE",
+      base64: fileData.base64,
+      mimeType: fileData.mimeType
     });
-    const data=await resp.json();
-    const text=data.content.map(c=>c.text||"").join("");
-    const clean=text.replace(/```json|```/g,"").trim();
-    extraction=JSON.parse(clean);
+    const resp = await fetch(GAS_URL+"?"+params.toString(), {method:"POST", redirect:"follow"});
+    const data = await resp.json();
+    if(data.error) throw new Error(data.error);
+    extraction = data;
     state="extracted";
   } catch(e) {
     errMsg="Erreur d'analyse : "+e.message;
