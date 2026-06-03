@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Factures — AB RENOV 35</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --navy:#162D49;--beige:#F3EAE2;--lavande:#A495C3;--lavande-dark:#7B6BA8;
+  --lavande-light:#EDE9F4;--white:#FFFFFF;--muted:#6B7A8D;--border:#C8BFB5;
+  --bgsoft:#EAE4DC;--green:#2D7D52;--green-light:#EAF4EF;--orange:#C0622B;
+}
+html,body{min-height:100%;background:var(--beige);font-family:'DM Sans',sans-serif;color:var(--navy);}
+button{font-family:inherit;cursor:pointer;-webkit-appearance:none;}
+input,select,textarea{font-family:inherit;}
+
+#header{background:var(--navy);position:sticky;top:0;z-index:100;}
+#header-inner{max-width:600px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.logo-title{font-family:'Futura PT','Futura','Century Gothic',sans-serif;font-weight:800;font-size:16px;color:#fff;letter-spacing:1px;}
+.logo-sub{font-size:9px;color:var(--lavande);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-top:2px;}
+#header-bar{height:3px;background:linear-gradient(90deg,var(--lavande),var(--lavande-dark),var(--navy));}
+
+/* TABS */
+#tabs-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:51px;z-index:99;}
+#tabs-bar-inner{max-width:600px;margin:0 auto;display:flex;}
+.tab-btn{flex:1;padding:12px 4px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--lavande);}
+
+#app{max-width:600px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:16px;}
+.label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+
+/* ZONE IMPORT */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--beige);}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--lavande);background:var(--lavande-light);}
+.drop-icon{font-size:40px;margin-bottom:12px;}
+.drop-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.drop-sub{font-size:12px;color:var(--muted);}
+.drop-btns{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+
+/* PREVIEW */
+.preview-wrap{position:relative;border-radius:10px;overflow:hidden;background:#000;max-height:300px;display:flex;align-items:center;justify-content:center;}
+.preview-wrap img{max-width:100%;max-height:300px;object-fit:contain;}
+.preview-wrap .overlay{position:absolute;top:8px;right:8px;}
+
+/* EXTRACTION IA */
+.ia-box{background:var(--lavande-light);border:1px solid var(--lavande);border-radius:10px;padding:14px;}
+.ia-loading{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--lavande-dark);font-weight:600;}
+.spinner{width:18px;height:18px;border:2px solid var(--lavande);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.form-input{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);font-size:13px;color:var(--navy);background:var(--white);outline:none;appearance:none;}
+.form-input:focus{border-color:var(--navy);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* BOUTONS */
+.btn{height:44px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:700;border:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-navy:disabled{opacity:.4;cursor:not-allowed;}
+.btn-soft{background:var(--bgsoft);color:var(--navy);border:1.5px solid var(--border);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-full{width:100%;}
+.btn-lavande{background:var(--lavande);color:#fff;}
+
+/* NOM FICHIER */
+.filename-preview{background:var(--bgsoft);border-radius:8px;padding:10px 14px;font-size:11px;font-weight:700;color:var(--navy);word-break:break-all;border:1px solid var(--border);}
+
+/* LISTE */
+.facture-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bgsoft);}
+.facture-row:last-child{border-bottom:none;}
+.facture-info{flex:1;min-width:0;}
+.facture-nom{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.facture-meta{font-size:10px;color:var(--muted);margin-top:3px;}
+.facture-montant{font-weight:800;font-size:14px;color:var(--navy);flex-shrink:0;}
+.badge-ok{background:var(--green-light);color:var(--green);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;}
+
+.empty{padding:32px 16px;text-align:center;color:var(--muted);font-size:13px;}
+.note{font-size:11px;color:var(--muted);text-align:center;padding:8px;}
+.err{background:#FDECEA;border:1px solid #F5C6C2;border-radius:10px;padding:12px;font-size:12px;color:#C0392B;margin-bottom:8px;}
+.success-banner{background:var(--green-light);border:1px solid #A8D5BC;border-radius:10px;padding:14px;font-size:13px;color:var(--green);font-weight:700;text-align:center;}
+</style>
+</head>
+<body>
+<div id="header">
+  <div id="header-inner">
+    <div>
+      <div class="logo-title">AB RENOV 35</div>
+      <div class="logo-sub">FACTURES</div>
+    </div>
+  </div>
+  <div id="header-bar"></div>
+</div>
+<div id="tabs-bar">
+  <div id="tabs-bar-inner">
+    <button class="tab-btn active" onclick="switchTab('import')">📄 Importer</button>
+    <button class="tab-btn" onclick="switchTab('liste')">📋 Envoyées</button>
+  </div>
+</div>
+<div id="app"></div>
+
+<script>
+const GAS_URL = "VOTRE_GAS_URL"; // À remplacer
+const DROPBOX_TOKEN = "sl.u.AGgCoJTBGiVs8vFV9O5EztSptl_y2zPD0o3DfXRP_yjE5RWRYGVPU1ZegZcEZeGquoWsB3sDk6lmVdBCOJNjKkmDEFwQ_-Ky5GCU6PEXEUG8jxeA5otdR9-vGy_kg8MCSYOZlbzXGqsl21ASZeKOEsshFYTym8odPajQzBIPsax-bAT8kDQvutI4A6Fr84sT1u0CA0UbxMurPtCJRPOUq1ykEdvy154oB39YdeJi2G9MmO8aq4PMDPYD0r5ud_xrLCmL_WEqbAmnUuPsu_8PDQMzB_Yu76fs12dn5zSef4E4vpZ0OJyufFyn67rxzMT3TR7XCeZRlWWsWokRJvzwEeQatXwJJKENpNPR5vaWpywa1fHfb5MLWOIDkPqOEfAaGHf28AJHESaUvnRfWp43fDibOEY8wWQ5NP4wHi-wCD9akm7ZenEXiiy8paXlAX3DvJeE3j7LHb-db66u9SEMwdfNWGIAzBWSo_hp_HF-TA1Wrg6ifk7p2rbk-FhwuNFAVv2LDE1KOfzrh7guOHOhcmVx1xuB6b2VQE5N1gC2-uhMDwjianMjpHNbe3OC1lF-YPxTkSgs8UgIihrTdUFirwapuP2PxsZNiQetbktOronnlvr_zoDiSfUjPmwgrS4daQR2RltYJ6GH94bvv3BazuegmgGOB27jitm1wZ8N-xYPtg5xQeUS2n6S6UEuUnrbNOAXLz5_bPbqRfkltudYPxXfNmrsw60q5jUD2tB_NHstS8SLnuLmaJYCtWDRSxkhKYZdp4Rub7wxDC5w2wjvtnYG4FLeHNm8WFJK1bmkchl7syOSZGzL62aDPi9pqqDdpw2rIqpkkPc37-_cSVGIpkoQ7BIF2QSHeSiFkLU9JK9IU-itdXSNi9iB9sBVydVlfY-rg7iENSV5W7NlIuP1u4Tr-VEas-z1B4ir9VCJIVHuDJgyfrJLVJ771R8XJxHNl4R8O1S5xI0QuY5371WY0ykaDfd2bGFD5u6LU87y96KVIL6fRqCFFij5cUWQ08Mb0B7uhOJKCcgk_KLXZj_0aGGGNmhEhjgSXRARAWzFTACBUtaBlpuGMD_P2_ZUAT3I-Z7XgLRmLigjz3Nbo2Lamo0wzGeMd__X7kMc-Te34x4G7Kapgg6X_7_S6J8hkdJPBGmlg7nwBP956Y0dc0UOYLURRGA-bZoBT2igKGUZsxPMtojyfZ7Da7LiN5nkmtvg5T28ooEwrCBFkC9_nvti-nceEOkNsXUDkIItEKoZm-YrVIsfLiQ7Xw595tq2HdgS0z2OsjtIzUM2KAnllPvJ5y6Eb4qy7v4E04WQFCtXA20u7r7Oq8O6P2unXXQq5ghXK1iar12BwS-XsyHK-tG4MGugqV88abIa5RdkpfOjTo4qSVBtoct3G_77jyNLGH_8OgAFR6TTwBotQKSMH94RFWgllzlN3Nr0q5nT9xPl9X_xjTS5cbIa3MUm2N1l6DqlI8M";
+const DROPBOX_FOLDER = "/AB RENOV 35/FACTURES VENTES/FACTURES A CLASSER";
+const ANTHROPIC_KEY = ""; // Géré via GAS
+
+let tab = "import";
+let fileData = null; // {base64, mimeType, name, raw}
+let extraction = null; // {fournisseur, date, libelle, montant}
+let factures = [];
+let state = "idle"; // idle | loading | extracted | sending | sent
+let errMsg = "";
+
+function eur(n){return new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",minimumFractionDigits:2}).format(Number(n));}
+function fmtDate(s){return new Date(s).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"});}
+function mk(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function buildFileName(ext) {
+  if(!extraction) return "";
+  const f = (extraction.fournisseur||"Fournisseur").replace(/[^a-zA-Z0-9À-ÿ\s]/g,"").trim().replace(/\s+/g,"-");
+  const d = (extraction.date||"").replace(/\//g,"-");
+  const l = (extraction.libelle||"").replace(/[^a-zA-Z0-9À-ÿ\s]/g,"").trim().replace(/\s+/g,"-").slice(0,30);
+  const m = (extraction.montant||"0").replace(/[^\d,.]/g,"").replace(",",".");
+  return `${f}_${d}_${l}_${m}TTC.${ext}`;
+}
+
+function switchTab(t) {
+  tab = t;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".tab-btn")[t==="import"?0:1].classList.add("active");
+  render();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  if(tab==="import") renderImport(app);
+  else renderListe(app);
+}
+
+function renderImport(app) {
+  if(errMsg){const b=mk("div","err");b.textContent="⚠ "+errMsg;app.append(b);}
+
+  if(state==="sent") {
+    const s=mk("div","success-banner");
+    s.innerHTML=`✅ Facture envoyée dans Dropbox !<br><small style="font-weight:400;font-size:11px">${esc(buildFileName(fileData?.ext||"pdf"))}</small>`;
+    app.append(s);
+    const btn=mk("button","btn btn-navy btn-full");btn.style.marginTop="8px";
+    btn.textContent="＋ Nouvelle facture";
+    btn.onclick=()=>{fileData=null;extraction=null;state="idle";errMsg="";render();};
+    app.append(btn);
+    return;
+  }
+
+  // ZONE IMPORT
+  if(!fileData) {
+    const card=mk("div","card");
+    const zone=mk("div","drop-zone");
+    zone.id="drop-zone";
+    zone.innerHTML=`<div class="drop-icon">📄</div>
+      <div class="drop-title">Importer une facture</div>
+      <div class="drop-sub">PDF, JPG, PNG acceptés</div>
+      <div class="drop-btns">
+        <label class="btn btn-navy" style="cursor:pointer">
+          📁 Choisir un fichier
+          <input type="file" accept="image/*,.pdf" style="display:none" onchange="onFile(this)">
+        </label>
+        <label class="btn btn-lavande" style="cursor:pointer">
+          📷 Prendre une photo
+          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFile(this)">
+        </label>
+      </div>`;
+
+    zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("drag");});
+    zone.addEventListener("dragleave",()=>zone.classList.remove("drag"));
+    zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("drag");if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+    card.append(zone);
+    app.append(card);
+    return;
+  }
+
+  // PREVIEW
+  const prevCard=mk("div","card");
+  if(fileData.mimeType.startsWith("image/")) {
+    const wrap=mk("div","preview-wrap");
+    const img=document.createElement("img");img.src=fileData.dataUrl;
+    const ovl=mk("div","overlay");
+    const chg=mk("button","btn btn-soft");chg.style.fontSize="11px";chg.style.height="30px";chg.textContent="Changer";
+    chg.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
+    ovl.append(chg);wrap.append(img,ovl);prevCard.append(wrap);
+  } else {
+    prevCard.innerHTML=`<div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:32px">📄</span>
+      <div><div style="font-weight:700;font-size:13px">${esc(fileData.name)}</div>
+      <div style="font-size:11px;color:var(--muted)">PDF</div></div>
+      <button class="btn btn-soft" style="font-size:11px;height:30px;margin-left:auto" onclick="fileData=null;extraction=null;state='idle';render()">Changer</button>
+    </div>`;
+  }
+  app.append(prevCard);
+
+  // EXTRACTION IA
+  if(state==="idle") {
+    const btn=mk("button","btn btn-navy btn-full");
+    btn.textContent="🤖 Analyser avec l'IA";
+    btn.onclick=analyser;
+    app.append(btn);
+  }
+
+  if(state==="loading") {
+    const box=mk("div","ia-box");
+    box.innerHTML=`<div class="ia-loading"><div class="spinner"></div>Lecture de la facture en cours…</div>`;
+    app.append(box);
+  }
+
+  if(state==="extracted" || state==="sending") {
+    // Formulaire de validation
+    const fcard=mk("div","card");fcard.style.border="2px solid var(--navy)";
+    fcard.innerHTML=`<div class="label" style="margin-bottom:12px">✅ Informations extraites — vérifiez et corrigez</div>
+      <div class="form-group">
+        <div class="label">Fournisseur</div>
+        <input id="f-fournisseur" class="form-input" type="text" value="${esc(extraction.fournisseur||"")}">
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <div class="label">Date (JJ-MM-AAAA)</div>
+          <input id="f-date" class="form-input" type="text" placeholder="03-06-2026" value="${esc(extraction.date||"")}">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <div class="label">Montant TTC (€)</div>
+          <input id="f-montant" class="form-input" type="text" value="${esc(extraction.montant||"")}">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <div class="label">Libellé / Intitulé</div>
+        <input id="f-libelle" class="form-input" type="text" value="${esc(extraction.libelle||"")}">
+      </div>`;
+
+    // Nom fichier preview
+    const ext = fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg";
+    fileData.ext = ext;
+    const fnDiv=mk("div","");fnDiv.style.marginBottom="12px";
+    fnDiv.innerHTML=`<div class="label">Nom du fichier Dropbox</div><div class="filename-preview" id="filename-preview">${buildFileName(ext)}</div>`;
+    fcard.append(fnDiv);
+
+    // Mettre à jour le nom en temps réel
+    fcard.querySelectorAll(".form-input").forEach(i=>i.addEventListener("input",()=>{
+      extraction.fournisseur=document.getElementById("f-fournisseur")?.value||"";
+      extraction.date=document.getElementById("f-date")?.value||"";
+      extraction.montant=document.getElementById("f-montant")?.value||"";
+      extraction.libelle=document.getElementById("f-libelle")?.value||"";
+      const fp=document.getElementById("filename-preview");
+      if(fp) fp.textContent=buildFileName(ext);
+    }));
+
+    const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
+    const sendBtn=mk("button","btn btn-green btn-full");
+    sendBtn.disabled=state==="sending";
+    sendBtn.textContent=state==="sending"?"Envoi en cours…":"📤 Valider et envoyer vers Dropbox";
+    sendBtn.onclick=validerEtEnvoyer;
+    const cancelBtn=mk("button","btn btn-soft");cancelBtn.textContent="Annuler";
+    cancelBtn.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
+    btns.append(sendBtn,cancelBtn);fcard.append(btns);
+    app.append(fcard);
+  }
+}
+
+function renderListe(app) {
+  const card=mk("div","card",);
+  card.innerHTML=`<div class="label" style="margin-bottom:12px">Factures envoyées</div>`;
+
+  if(!factures.length){
+    const em=mk("div","empty");em.textContent="Aucune facture envoyée pour l'instant";
+    card.append(em);
+  } else {
+    [...factures].reverse().forEach(f=>{
+      const row=mk("div","facture-row");
+      row.innerHTML=`
+        <div style="font-size:24px;flex-shrink:0">${f.type==="pdf"?"📄":"🖼️"}</div>
+        <div class="facture-info">
+          <div class="facture-nom">${esc(f.fournisseur)}</div>
+          <div class="facture-meta">${esc(f.date)} · ${esc(f.libelle)}</div>
+          <div class="facture-meta" style="margin-top:2px;font-size:9px;color:var(--border)">${esc(f.filename)}</div>
+        </div>
+        <div>
+          <div class="facture-montant">${eur(f.montant)}</div>
+          <div style="text-align:right;margin-top:4px"><span class="badge-ok">✓ Dropbox</span></div>
+        </div>`;
+      card.append(row);
+    });
+  }
+  app.append(card);
+  const note=mk("div","note");note.textContent="☁️ Les fichiers sont dans Dropbox → AB RENOV 35 / FACTURES VENTES / FACTURES A CLASSER";app.append(note);
+}
+
+// ── FICHIER ───────────────────────────────────────────────────────────────
+function onFile(input){if(input.files[0])handleFile(input.files[0]);}
+
+function handleFile(file) {
+  const reader=new FileReader();
+  reader.onload=e=>{
+    fileData={
+      dataUrl:e.target.result,
+      base64:e.target.result.split(",")[1],
+      mimeType:file.type||"image/jpeg",
+      name:file.name,
+      raw:file
+    };
+    extraction=null;state="idle";errMsg="";render();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── ANALYSE IA ────────────────────────────────────────────────────────────
+async function analyser() {
+  state="loading";errMsg="";render();
+  try {
+    const isPdf = fileData.mimeType==="application/pdf";
+    const contentBlock = isPdf
+      ? {type:"document",source:{type:"base64",media_type:"application/pdf",data:fileData.base64}}
+      : {type:"image",source:{type:"base64",media_type:fileData.mimeType,data:fileData.base64}};
+
+    const resp = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:500,
+        system:"Tu analyses des factures pour AB RENOV 35, entreprise de rénovation. Réponds UNIQUEMENT en JSON valide, sans markdown, sans explication.",
+        messages:[{role:"user",content:[
+          contentBlock,
+          {type:"text",text:`Analyse cette facture et extrais ces informations au format JSON exact:
+{
+  "fournisseur": "nom du fournisseur/émetteur",
+  "date": "date au format JJ-MM-AAAA",
+  "libelle": "intitulé court de la prestation ou des produits (max 30 caractères)",
+  "montant": "montant TTC en chiffres uniquement ex: 1250.00"
+}
+Si une info est absente, mets une chaîne vide. Réponds UNIQUEMENT avec le JSON.`}
+        ]}]
+      })
+    });
+    const data=await resp.json();
+    const text=data.content.map(c=>c.text||"").join("");
+    const clean=text.replace(/```json|```/g,"").trim();
+    extraction=JSON.parse(clean);
+    state="extracted";
+  } catch(e) {
+    errMsg="Erreur d'analyse : "+e.message;
+    state="idle";
+  }
+  render();
+}
+
+// ── VALIDATION + ENVOI DROPBOX ────────────────────────────────────────────
+async function validerEtEnvoyer() {
+  // Récupérer les valeurs du formulaire
+  extraction.fournisseur=document.getElementById("f-fournisseur")?.value.trim()||extraction.fournisseur;
+  extraction.date=document.getElementById("f-date")?.value.trim()||extraction.date;
+  extraction.montant=document.getElementById("f-montant")?.value.trim()||extraction.montant;
+  extraction.libelle=document.getElementById("f-libelle")?.value.trim()||extraction.libelle;
+
+  if(!extraction.fournisseur||!extraction.montant){errMsg="Fournisseur et montant obligatoires";render();return;}
+
+  state="sending";errMsg="";render();
+
+  const ext=fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg";
+  fileData.ext=ext;
+  const filename=buildFileName(ext);
+  const dropboxPath=DROPBOX_FOLDER+"/"+filename;
+
+  try {
+    // Envoi Dropbox
+    const fileBytes=await fetch(fileData.dataUrl).then(r=>r.arrayBuffer());
+    const dbResp=await fetch("https://content.dropboxapi.com/2/files/upload",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+DROPBOX_TOKEN,
+        "Dropbox-API-Arg":JSON.stringify({path:dropboxPath,mode:"add",autorename:true}),
+        "Content-Type":"application/octet-stream"
+      },
+      body:fileBytes
+    });
+    if(!dbResp.ok){const t=await dbResp.text();throw new Error("Dropbox: "+t);}
+
+    // Sauvegarde locale
+    const entry={
+      id:Date.now().toString(),
+      fournisseur:extraction.fournisseur,
+      date:extraction.date,
+      libelle:extraction.libelle,
+      montant:extraction.montant,
+      filename,
+      type:ext,
+      dropboxPath,
+      ts:new Date().toISOString()
+    };
+    factures.push(entry);
+
+    // TODO: Sauvegarder dans Google Sheets via GAS
+    state="sent";
+  } catch(e) {
+    errMsg="Erreur envoi : "+e.message;
+    state="extracted";
+  }
+  render();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
