@@ -322,12 +322,12 @@ function handleFile(file) {
 async function analyser() {
   state="loading";errMsg="";render();
   try {
-    const params = new URLSearchParams({
-      method:"ANALYSE",
-      base64: fileData.base64,
-      mimeType: fileData.mimeType
+    const resp = await fetch(GAS_URL+"?method=ANALYSE", {
+      method:"POST",
+      redirect:"follow",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType})
     });
-    const resp = await fetch(GAS_URL+"?"+params.toString(), {method:"POST", redirect:"follow"});
     const data = await resp.json();
     if(data.error) throw new Error(data.error);
     extraction = data;
@@ -385,12 +385,11 @@ async function validerEtEnvoyer() {
     factures.push(entry);
 
     // Sauvegarder dans Google Sheets via GAS
-    const params = new URLSearchParams({
-      method:"POST", id:entry.id, fournisseur:entry.fournisseur,
-      date:entry.date, libelle:entry.libelle, montant:entry.montant,
-      filename:entry.filename, dropboxPath:entry.dropboxPath, ts:entry.ts
+    await fetch(GAS_URL+"?method=POST", {
+      method:"POST", redirect:"follow",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(entry)
     });
-    await fetch(GAS_URL+"?"+params.toString(), {method:"POST", redirect:"follow"});
     state="sent";
   } catch(e) {
     errMsg="Erreur envoi : "+e.message;
