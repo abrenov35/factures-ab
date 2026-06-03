@@ -340,7 +340,6 @@ async function analyser() {
 
 // ── VALIDATION + ENVOI DROPBOX ────────────────────────────────────────────
 async function validerEtEnvoyer() {
-  // Récupérer les valeurs du formulaire
   extraction.fournisseur=document.getElementById("f-fournisseur")?.value.trim()||extraction.fournisseur;
   extraction.date=document.getElementById("f-date")?.value.trim()||extraction.date;
   extraction.montant=document.getElementById("f-montant")?.value.trim()||extraction.montant;
@@ -353,23 +352,16 @@ async function validerEtEnvoyer() {
   const ext=fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg";
   fileData.ext=ext;
   const filename=buildFileName(ext);
-  const dropboxPath=DROPBOX_FOLDER+"/"+filename;
 
   try {
-    // Envoi Dropbox
-    const fileBytes=await fetch(fileData.dataUrl).then(r=>r.arrayBuffer());
-    const dbResp=await fetch("https://content.dropboxapi.com/2/files/upload",{
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer "+DROPBOX_TOKEN,
-        "Dropbox-API-Arg":JSON.stringify({path:dropboxPath,mode:"add",autorename:true}),
-        "Content-Type":"application/octet-stream"
-      },
-      body:fileBytes
+    // Upload Dropbox via GAS
+    const upResp = await fetch(GAS_URL+"?method=UPLOAD", {
+      method:"POST", redirect:"follow",
+      body: JSON.stringify({base64: fileData.base64, filename})
     });
-    if(!dbResp.ok){const t=await dbResp.text();throw new Error("Dropbox: "+t);}
+    const upData = await upResp.json();
+    if(upData.error) throw new Error(upData.error);
 
-    // Sauvegarde locale
     const entry={
       id:Date.now().toString(),
       fournisseur:extraction.fournisseur,
@@ -378,16 +370,17 @@ async function validerEtEnvoyer() {
       montant:extraction.montant,
       filename,
       type:ext,
-      dropboxPath,
+      dropboxPath:upData.path||DROPBOX_FOLDER+"/"+filename,
       ts:new Date().toISOString()
     };
-    factures.push(entry);
 
     // Sauvegarder dans Google Sheets via GAS
-    await fetch(GAS_URL+"?method=POST", {
+    await fetch(GAS_URL+"?method=SAVE", {
       method:"POST", redirect:"follow",
       body: JSON.stringify(entry)
     });
+
+    factures.push(entry);
     state="sent";
   } catch(e) {
     errMsg="Erreur envoi : "+e.message;
