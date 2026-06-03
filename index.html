@@ -173,11 +173,11 @@ function renderImport(app) {
       <div class="drop-btns">
         <label class="btn btn-navy" style="cursor:pointer">
           📁 Choisir un fichier
-          <input type="file" accept="image/*,.pdf" style="display:none" onchange="onFile(this)">
+          <input type="file" accept="image/jpeg,image/png,.pdf" style="display:none" onchange="onFile(this)">
         </label>
         <label class="btn btn-lavande" style="cursor:pointer">
           📷 Prendre une photo
-          <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFile(this)">
+          <input type="file" accept="image/jpeg,image/png" capture="environment" style="display:none" onchange="onFile(this)">
         </label>
       </div>`;
 
