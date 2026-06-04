@@ -397,13 +397,6 @@ async function validerEtEnvoyer() {
       ts:new Date().toISOString()
     };
 
-    // Sauvegarder dans Google Sheets via GAS
-    await fetch(GAS_URL+"?method=SAVE", {
-      method:"POST", redirect:"follow",
-      headers:{"Content-Type":"text/plain"},
-      body: JSON.stringify(entry)
-    });
-
     factures.push(entry);
     state="sent";
   } catch(e) {
