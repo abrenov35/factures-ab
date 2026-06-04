@@ -361,7 +361,7 @@ async function analyser() {
     let body;
     if(fileData.mimeType==="application/pdf") {
       const text = await extractPdfText(fileData.base64);
-      body = JSON.stringify({text, mimeType: fileData.mimeType});
+      body = JSON.stringify({text, mimeType: "text/plain"});
     } else {
       body = JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType});
     }
