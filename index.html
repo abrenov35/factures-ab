@@ -345,6 +345,7 @@ async function analyser() {
     const resp = await fetch(GAS_URL+"?method=ANALYSE", {
       method:"POST",
       redirect:"follow",
+      headers:{"Content-Type":"application/json"},
       body: JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType})
     });
     const data = await resp.json();
@@ -363,7 +364,8 @@ async function validerEtEnvoyer() {
   extraction.fournisseur=document.getElementById("f-fournisseur")?.value.trim()||extraction.fournisseur;
   extraction.date=document.getElementById("f-date")?.value.trim()||extraction.date;
   extraction.montant=document.getElementById("f-montant")?.value.trim()||extraction.montant;
-  extraction.libelle=document.getElementById("f-libelle")?.value.trim()||extraction.libelle;
+  const libelleEl=document.getElementById("f-libelle");
+  if(libelleEl) extraction.libelle=libelleEl.value.trim();
 
   if(!extraction.fournisseur||!extraction.montant){errMsg="Fournisseur et montant obligatoires";render();return;}
 
@@ -377,6 +379,7 @@ async function validerEtEnvoyer() {
     // Upload Dropbox via GAS
     const upResp = await fetch(GAS_URL+"?method=UPLOAD", {
       method:"POST", redirect:"follow",
+      headers:{"Content-Type":"application/json"},
       body: JSON.stringify({base64: fileData.base64, filename})
     });
     const upData = await upResp.json();
@@ -397,6 +400,7 @@ async function validerEtEnvoyer() {
     // Sauvegarder dans Google Sheets via GAS
     await fetch(GAS_URL+"?method=SAVE", {
       method:"POST", redirect:"follow",
+      headers:{"Content-Type":"application/json"},
       body: JSON.stringify(entry)
     });
 
