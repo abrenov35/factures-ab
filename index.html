@@ -345,7 +345,7 @@ async function analyser() {
     const resp = await fetch(GAS_URL+"?method=ANALYSE", {
       method:"POST",
       redirect:"follow",
-      headers:{"Content-Type":"application/json"},
+      headers:{"Content-Type":"text/plain"},
       body: JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType})
     });
     const data = await resp.json();
@@ -379,7 +379,7 @@ async function validerEtEnvoyer() {
     // Upload Dropbox via GAS
     const upResp = await fetch(GAS_URL+"?method=UPLOAD", {
       method:"POST", redirect:"follow",
-      headers:{"Content-Type":"application/json"},
+      headers:{"Content-Type":"text/plain"},
       body: JSON.stringify({base64: fileData.base64, filename})
     });
     const upData = await upResp.json();
@@ -400,7 +400,7 @@ async function validerEtEnvoyer() {
     // Sauvegarder dans Google Sheets via GAS
     await fetch(GAS_URL+"?method=SAVE", {
       method:"POST", redirect:"follow",
-      headers:{"Content-Type":"application/json"},
+      headers:{"Content-Type":"text/plain"},
       body: JSON.stringify(entry)
     });
 
