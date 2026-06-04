@@ -6,6 +6,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>Factures — AB RENOV 35</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -339,14 +341,35 @@ function handleFile(file) {
 }
 
 // ── ANALYSE IA ────────────────────────────────────────────────────────────
+async function extractPdfText(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+  const pdf = await pdfjsLib.getDocument({data: bytes}).promise;
+  let text = "";
+  for(let p=1;p<=pdf.numPages;p++) {
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    text += content.items.map(i=>i.str).join(" ") + "\n";
+  }
+  return text.trim();
+}
+
 async function analyser() {
   state="loading";errMsg="";render();
   try {
+    let body;
+    if(fileData.mimeType==="application/pdf") {
+      const text = await extractPdfText(fileData.base64);
+      body = JSON.stringify({text, mimeType: fileData.mimeType});
+    } else {
+      body = JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType});
+    }
     const resp = await fetch(GAS_URL+"?method=ANALYSE", {
       method:"POST",
       redirect:"follow",
       headers:{"Content-Type":"text/plain"},
-      body: JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType})
+      body
     });
     const data = await resp.json();
     if(data.error) throw new Error(data.error);
