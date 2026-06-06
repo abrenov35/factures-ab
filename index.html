@@ -2,135 +2,154 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Factures — AB RENOV 35</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --navy:#162D49;--beige:#F3EAE2;--lavande:#A495C3;--lavande-dark:#7B6BA8;
-  --lavande-light:#EDE9F4;--white:#FFFFFF;--muted:#6B7A8D;--border:#C8BFB5;
-  --bgsoft:#EAE4DC;--green:#2D7D52;--green-light:#EAF4EF;--orange:#C0622B;
+  --navy:#162D49;--beige:#F3EAE2;--lav:#A495C3;--lav-dark:#7B6BA8;
+  --lav-light:#EDE9F4;--white:#fff;--grey:#8A8078;--border:#C8BFB5;
+  --bgsoft:#EAE4DC;--green:#2D7D52;--green-light:#EAF4EF;--red:#C0392B;
+  --cream:#F3EAE2;
 }
-html,body{min-height:100%;background:var(--beige);font-family:'DM Sans',sans-serif;color:var(--navy);}
+html,body{min-height:100%;background:var(--cream);font-family:'Barlow',sans-serif;color:var(--navy);}
 button{font-family:inherit;cursor:pointer;-webkit-appearance:none;}
 input,select,textarea{font-family:inherit;}
 
+/* HEADER */
 #header{background:var(--navy);position:sticky;top:0;z-index:100;}
-#header-inner{max-width:600px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
-.logo-title{font-family:'Futura PT','Futura','Century Gothic',sans-serif;font-weight:800;font-size:16px;color:#fff;letter-spacing:1px;}
-.logo-sub{font-size:9px;color:var(--lavande);letter-spacing:2px;font-weight:700;text-transform:uppercase;margin-top:2px;}
-#header-bar{height:3px;background:linear-gradient(90deg,var(--lavande),var(--lavande-dark),var(--navy));}
+#header-inner{max-width:560px;margin:0 auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.logo-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;color:#fff;letter-spacing:1.5px;text-transform:uppercase;}
+.logo-sub{font-size:9px;color:var(--lav);letter-spacing:2.5px;font-weight:700;text-transform:uppercase;margin-top:2px;}
+#header-bar{height:3px;background:linear-gradient(90deg,var(--lav),var(--lav-dark),var(--navy));}
 
 /* TABS */
-#tabs-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:51px;z-index:99;}
-#tabs-bar-inner{max-width:600px;margin:0 auto;display:flex;}
-.tab-btn{flex:1;padding:12px 4px;border:none;background:transparent;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;}
-.tab-btn.active{color:var(--navy);border-bottom-color:var(--lavande);}
+#tabs-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:54px;z-index:99;}
+#tabs-inner{max-width:560px;margin:0 auto;display:flex;}
+.tab-btn{flex:1;padding:13px 8px;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;}
+.tab-btn.active{color:var(--navy);border-bottom-color:var(--lav);}
 
-#app{max-width:600px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
-.card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:16px;}
-.label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
-.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+/* MAIN */
+#app{max-width:560px;margin:0 auto;padding:14px 14px 40px;}
 
-/* ZONE IMPORT */
-.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--beige);}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--lavande);background:var(--lavande-light);}
-.drop-icon{font-size:40px;margin-bottom:12px;}
-.drop-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px;}
-.drop-sub{font-size:12px;color:var(--muted);}
-.drop-btns{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+/* CARDS */
+.card-navy{background:var(--navy);border-radius:14px;padding:20px 18px;margin-bottom:14px;box-shadow:0 8px 28px rgba(22,45,73,.2);}
+.card-white{background:var(--white);border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(22,45,73,.07);border:1.5px solid var(--border);}
+
+/* LABELS */
+.lbl-white{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin-bottom:6px;}
+.lbl-navy{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);margin-bottom:6px;}
+.lbl-grey{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:5px;}
+
+/* DROP ZONE */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:36px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bgsoft);}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--lav);background:var(--lav-light);}
+.drop-icon{font-size:44px;margin-bottom:14px;}
+.drop-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:6px;}
+.drop-sub{font-size:12px;color:var(--grey);}
+.drop-btns{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
 
 /* PREVIEW */
-.preview-wrap{position:relative;border-radius:10px;overflow:hidden;background:#000;max-height:300px;display:flex;align-items:center;justify-content:center;}
-.preview-wrap img{max-width:100%;max-height:300px;object-fit:contain;}
-.preview-wrap .overlay{position:absolute;top:8px;right:8px;}
+.preview-wrap{border-radius:10px;overflow:hidden;background:#000;max-height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.preview-wrap img{max-width:100%;max-height:220px;object-fit:contain;}
 
-/* EXTRACTION IA */
-.ia-box{background:var(--lavande-light);border:1px solid var(--lavande);border-radius:10px;padding:14px;}
-.ia-loading{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--lavande-dark);font-weight:600;}
-.spinner{width:18px;height:18px;border:2px solid var(--lavande);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* FORM */
-.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
-.form-input{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);font-size:13px;color:var(--navy);background:var(--white);outline:none;appearance:none;}
+/* INPUTS */
+.form-input{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;color:var(--navy);font-weight:500;background:var(--white);outline:none;}
 .form-input:focus{border-color:var(--navy);}
+.form-input-lav{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid #C4B8E0;font-size:14px;color:var(--navy);font-weight:500;background:var(--lav-light);outline:none;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-group{margin-bottom:12px;}
+
+/* IA BOX */
+.ia-loading{display:flex;align-items:center;gap:10px;font-size:13px;color:#fff;font-weight:600;}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ia-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(164,149,195,.2);border:1px solid var(--lav);border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lav);margin-bottom:12px;}
 
 /* BOUTONS */
-.btn{height:44px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:700;border:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
+.btn{height:44px;padding:0 18px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;}
 .btn-navy{background:var(--navy);color:#fff;}
-.btn-navy:disabled{opacity:.4;cursor:not-allowed;}
-.btn-soft{background:var(--bgsoft);color:var(--navy);border:1.5px solid var(--border);}
-.btn-green{background:var(--green);color:#fff;}
+.btn-navy:disabled{opacity:.35;cursor:not-allowed;}
+.btn-lav{background:var(--lav);color:#fff;box-shadow:0 4px 14px rgba(164,149,195,.4);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 14px rgba(45,125,82,.3);}
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.4);color:#fff;}
+.btn-ghost-dark{background:transparent;border:1.5px solid var(--border);color:var(--navy);}
 .btn-full{width:100%;}
-.btn-lavande{background:var(--lavande);color:#fff;}
+.btn-red{background:#FDECEA;border:1.5px solid #F5C6C2;color:var(--red);}
 
-/* NOM FICHIER */
-.filename-preview{background:var(--bgsoft);border-radius:8px;padding:10px 14px;font-size:11px;font-weight:700;color:var(--navy);word-break:break-all;border:1px solid var(--border);}
+/* FILENAME */
+.filename-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);word-break:break-all;}
 
-/* LISTE */
-.facture-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--bgsoft);}
+/* LISTE FACTURES */
+.facture-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--bgsoft);}
 .facture-row:last-child{border-bottom:none;}
+.facture-icon{font-size:28px;flex-shrink:0;width:36px;text-align:center;}
 .facture-info{flex:1;min-width:0;}
-.facture-nom{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.facture-meta{font-size:10px;color:var(--muted);margin-top:3px;}
-.facture-montant{font-weight:800;font-size:14px;color:var(--navy);flex-shrink:0;}
-.badge-ok{background:var(--green-light);color:var(--green);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;}
+.facture-nom{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--navy);}
+.facture-meta{font-size:11px;color:var(--grey);margin-top:3px;}
+.facture-file{font-size:9px;color:var(--border);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.facture-montant{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:var(--navy);flex-shrink:0;text-align:right;}
+.badge-ok{display:inline-block;background:var(--green-light);color:var(--green);border-radius:20px;padding:2px 8px;font-size:9px;font-weight:700;margin-top:3px;}
 
-.empty{padding:32px 16px;text-align:center;color:var(--muted);font-size:13px;}
-.note{font-size:11px;color:var(--muted);text-align:center;padding:8px;}
-.err{background:#FDECEA;border:1px solid #F5C6C2;border-radius:10px;padding:12px;font-size:12px;color:#C0392B;margin-bottom:8px;}
-.success-banner{background:var(--green-light);border:1px solid #A8D5BC;border-radius:10px;padding:14px;font-size:13px;color:var(--green);font-weight:700;text-align:center;}
+/* PROGRESS */
+.progress-track{background:rgba(255,255,255,.15);border-radius:99px;height:6px;overflow:hidden;margin:10px 0 6px;}
+.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lav),#fff);transition:width .4s ease;width:0%;}
 
-/* BARRE DE PROGRESSION UPLOAD */
-.upload-overlay{background:var(--white);border:2px solid var(--navy);border-radius:12px;padding:24px 20px;text-align:center;}
-.upload-icon{font-size:36px;margin-bottom:12px;animation:pulse 1.2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:.7;}}
-.upload-label{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
-.upload-step{font-size:11px;color:var(--muted);margin-bottom:16px;min-height:16px;}
-.progress-track{background:var(--bgsoft);border-radius:99px;height:8px;overflow:hidden;margin-bottom:8px;}
-.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lavande),var(--navy));transition:width .4s ease;width:0%;}
-.progress-pct{font-size:11px;font-weight:800;color:var(--navy);}
+/* ÉTATS */
+.success-banner{background:var(--green-light);border:1.5px solid #A8D5BC;border-radius:12px;padding:18px;text-align:center;}
+.success-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--green);margin-bottom:6px;}
+.success-file{font-size:11px;color:var(--green);opacity:.8;word-break:break-all;}
+.err{background:#FDECEA;border:1.5px solid #F5C6C2;border-radius:10px;padding:12px 14px;font-size:12px;font-weight:600;color:var(--red);margin-bottom:10px;}
+.empty{padding:40px 16px;text-align:center;}
+.empty-icon{font-size:2.5rem;opacity:.25;margin-bottom:10px;}
+.empty-text{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);}
+.note-box{background:rgba(164,149,195,.12);border:1px solid rgba(164,149,195,.3);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--grey);text-align:center;margin-top:4px;}
+
+.section-title{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.section-icon{background:var(--lav);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.section-label{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;}
+.section-label-dark{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);}
 </style>
 </head>
 <body>
+
 <div id="header">
   <div id="header-inner">
     <div>
       <div class="logo-title">AB RENOV 35</div>
-      <div class="logo-sub">FACTURES</div>
+      <div class="logo-sub">Factures &amp; Notes de frais</div>
     </div>
+    <div style="font-size:1.4rem;">🧾</div>
   </div>
   <div id="header-bar"></div>
 </div>
+
 <div id="tabs-bar">
-  <div id="tabs-bar-inner">
-    <button class="tab-btn active" onclick="switchTab('import')">📄 Importer</button>
-    <button class="tab-btn" onclick="switchTab('liste')">📋 Envoyées</button>
+  <div id="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('import')">📤 Importer</button>
+    <button class="tab-btn" onclick="switchTab('liste')">📋 Historique</button>
   </div>
 </div>
+
 <div id="app"></div>
 
 <script>
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz4qXrt7QZbV0Yb5spXaBtb2nhdRPE7nXYRAyxs78E5NkJpzDDkgog7yxv6TBzqX1yp/exec";
-const DROPBOX_TOKEN = ""; // Token géré côté serveur (GAS)
-const DROPBOX_FOLDER = "/AB RENOV 35/FACTURES VENTES/FACTURES A CLASSER";
-const ANTHROPIC_KEY = ""; // Géré via GAS
+const DROPBOX_FOLDER = "/AB RENOV 35/1. FACTURES A CLASSER";
 
 let tab = "import";
-let fileData = null; // {base64, mimeType, name, raw}
-let extraction = null; // {fournisseur, date, libelle, montant}
+let fileData = null;
+let extraction = null;
 let factures = [];
-let state = "idle"; // idle | loading | extracted | sending | sent
+let state = "idle";
 let errMsg = "";
 
 function eur(n){return new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",minimumFractionDigits:2}).format(Number(n));}
-function fmtDate(s){return new Date(s).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"});}
 function mk(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
@@ -147,8 +166,7 @@ function buildFileName(ext) {
 
 function switchTab(t) {
   tab = t;
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".tab-btn")[t==="import"?0:1].classList.add("active");
+  document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active", (t==="import"&&i===0)||(t==="liste"&&i===1)));
   render();
 }
 
@@ -161,204 +179,220 @@ function render() {
 }
 
 function renderImport(app) {
-  if(errMsg){const b=mk("div","err");b.textContent="⚠ "+errMsg;app.append(b);}
 
+  // ERREUR
+  if(errMsg){
+    const b=mk("div","err");
+    b.innerHTML=`⚠ ${esc(errMsg)}`;
+    app.append(b);
+  }
+
+  // SUCCÈS
   if(state==="sent") {
     const s=mk("div","success-banner");
-    s.innerHTML=`✅ Facture envoyée dans Dropbox !<br><small style="font-weight:400;font-size:11px">${esc(buildFileName(fileData?.ext||"pdf"))}</small>`;
+    s.innerHTML=`
+      <div style="font-size:2rem;margin-bottom:8px;">✅</div>
+      <div class="success-title">Facture envoyée !</div>
+      <div class="success-file">${esc(buildFileName(fileData?.ext||"pdf"))}</div>`;
     app.append(s);
-    const btn=mk("button","btn btn-navy btn-full");btn.style.marginTop="8px";
-    btn.textContent="＋ Nouvelle facture";
+    const btn=mk("button","btn btn-navy btn-full");
+    btn.style.marginTop="12px";
+    btn.innerHTML="＋ &nbsp;Nouvelle facture";
     btn.onclick=()=>{fileData=null;extraction=null;state="idle";errMsg="";render();};
     app.append(btn);
     return;
   }
 
-  // ZONE IMPORT
+  // ZONE IMPORT — pas de fichier
   if(!fileData) {
-    const card=mk("div","card");
-    const zone=mk("div","drop-zone");
-    zone.id="drop-zone";
-    zone.innerHTML=`<div class="drop-icon">📄</div>
-      <div class="drop-title">Importer une facture</div>
-      <div class="drop-sub">PDF, JPG, PNG acceptés</div>
-      <div class="drop-btns">
-        <label class="btn btn-navy" style="cursor:pointer">
-          📁 Choisir un fichier
-          <input type="file" accept="image/jpeg,image/png,.pdf" style="display:none" onchange="onFile(this)">
-        </label>
-        <label class="btn btn-lavande" style="cursor:pointer">
-          📷 Prendre une photo
-          <input type="file" accept="image/jpeg,image/png" capture="environment" style="display:none" onchange="onFile(this)">
-        </label>
+    const card=mk("div","card-navy");
+    card.innerHTML=`
+      <div class="section-title">
+        <div class="section-icon">📤</div>
+        <div class="section-label">Importer une facture</div>
+      </div>
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-icon">🧾</div>
+        <div class="drop-title">Photo ou PDF</div>
+        <div class="drop-sub">Facture, ticket, note de frais</div>
+        <div class="drop-btns">
+          <label class="btn btn-lav" style="cursor:pointer;">
+            📷 Prendre une photo
+            <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFile(this)">
+          </label>
+          <label class="btn btn-ghost" style="cursor:pointer;">
+            📁 Choisir un fichier
+            <input type="file" accept=".pdf,.png,.jpg,.jpeg,image/*" style="display:none" onchange="onFile(this)">
+          </label>
+        </div>
       </div>`;
-
-    zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("drag");});
-    zone.addEventListener("dragleave",()=>zone.classList.remove("drag"));
-    zone.addEventListener("drop",e=>{e.preventDefault();zone.classList.remove("drag");if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
-    card.append(zone);
+    // Drag & drop
+    const dz=card.querySelector("#drop-zone");
+    dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag");});
+    dz.addEventListener("dragleave",()=>dz.classList.remove("drag"));
+    dz.addEventListener("drop",e=>{e.preventDefault();dz.classList.remove("drag");if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
     app.append(card);
     return;
   }
 
-  // PREVIEW
-  const prevCard=mk("div","card");
-  if(fileData.mimeType.startsWith("image/")) {
-    const wrap=mk("div","preview-wrap");
-    const img=document.createElement("img");img.src=fileData.dataUrl;
-    const ovl=mk("div","overlay");
-    const chg=mk("button","btn btn-soft");chg.style.fontSize="11px";chg.style.height="30px";chg.textContent="Changer";
-    chg.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
-    ovl.append(chg);wrap.append(img,ovl);prevCard.append(wrap);
-  } else {
-    prevCard.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <span style="font-size:32px">📄</span>
-      <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(fileData.name)}</div>
-      <div style="font-size:11px;color:var(--muted)">PDF</div></div>
-      <button class="btn btn-soft" style="font-size:11px;height:30px" onclick="fileData=null;extraction=null;state='idle';render()">Changer</button>
-    </div>
-    <a href="${fileData.dataUrl}" target="_blank" class="btn btn-soft" style="width:100%;text-decoration:none;font-size:12px;height:38px">👁 Ouvrir le PDF</a>
-    <iframe src="${fileData.dataUrl}" style="width:100%;height:300px;border:1px solid var(--border);border-radius:8px;margin-top:10px" title="Aperçu PDF"></iframe>`;
-  }
-  app.append(prevCard);
+  // FICHIER CHARGÉ — preview + analyse
+  const previewCard=mk("div","card-navy");
 
-  // EXTRACTION IA
-  if(state==="idle") {
-    const btn=mk("button","btn btn-navy btn-full");
-    btn.textContent="🤖 Analyser avec l'IA";
-    btn.onclick=analyser;
-    app.append(btn);
+  // Header
+  previewCard.innerHTML=`
+    <div class="section-title">
+      <div class="section-icon">🔍</div>
+      <div class="section-label">${esc(fileData.name)}</div>
+    </div>`;
+
+  // Preview image
+  if(fileData.mimeType!=="application/pdf") {
+    const pw=mk("div","preview-wrap");
+    const img=mk("img");img.src=fileData.dataUrl;
+    pw.append(img);
+    previewCard.append(pw);
+  } else {
+    const pdflbl=mk("div","");
+    pdflbl.style.cssText="background:rgba(255,255,255,.1);border-radius:8px;padding:12px;text-align:center;font-size:13px;color:rgba(255,255,255,.8);margin-bottom:12px;";
+    pdflbl.innerHTML="📄 <strong>Fichier PDF</strong> prêt à analyser";
+    previewCard.append(pdflbl);
   }
 
   if(state==="loading") {
-    const box=mk("div","ia-box");
-    box.innerHTML=`<div class="ia-loading"><div class="spinner"></div>Lecture de la facture en cours…</div>`;
-    app.append(box);
+    const ia=mk("div","");ia.style.cssText="margin:8px 0;";
+    ia.innerHTML=`<div class="ia-loading"><div class="spinner"></div> Analyse en cours par l'IA…</div>`;
+    previewCard.append(ia);
+    const prog=mk("div","");
+    prog.innerHTML=`<div class="progress-track"><div class="progress-bar" style="width:60%;animation:none;"></div></div>`;
+    previewCard.append(prog);
+  } else {
+    const analyseBtn=mk("button","btn btn-lav btn-full");
+    analyseBtn.style.marginBottom="8px";
+    analyseBtn.innerHTML=extraction?"↻ &nbsp;Ré-analyser":"⚡ &nbsp;Analyser avec l'IA";
+    analyseBtn.onclick=analyser;
+    const changeBtn=mk("button","btn btn-ghost btn-full");
+    changeBtn.innerHTML="🔄 &nbsp;Changer de fichier";
+    changeBtn.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
+    previewCard.append(analyseBtn, changeBtn);
   }
 
-  if(state==="extracted" || state==="sending") {
-    // Formulaire de validation
-    const fcard=mk("div","card");fcard.style.border="2px solid var(--navy)";
-    fcard.innerHTML=`<div class="label" style="margin-bottom:12px">✅ Informations extraites — vérifiez et corrigez</div>
-      <div class="form-group">
-        <div class="label">Fournisseur</div>
-        <input id="f-fournisseur" class="form-input" type="text" value="${esc(extraction.fournisseur||"")}">
+  app.append(previewCard);
+
+  // RÉSULTAT EXTRACTION + FORMULAIRE
+  if(extraction && state!=="loading") {
+    const fcard=mk("div","card-navy");
+
+    // Badge IA
+    const badge=mk("div","ia-badge");badge.innerHTML="⚡ Extrait par l'IA — vérifiez et corrigez";
+    fcard.append(badge);
+
+    // Fournisseur
+    const g1=mk("div","form-group");
+    g1.innerHTML=`<div class="lbl-white">Fournisseur</div>
+      <input class="form-input-lav" id="f-fournisseur" value="${esc(extraction.fournisseur)}" placeholder="Nom du fournisseur">`;
+    fcard.append(g1);
+
+    // Date + Montant
+    const row=mk("div","form-row");
+    row.innerHTML=`
+      <div>
+        <div class="lbl-white">Date</div>
+        <input class="form-input-lav" id="f-date" value="${esc(extraction.date)}" placeholder="JJ-MM-AAAA">
       </div>
-      <div class="form-row">
-        <div class="form-group" style="margin-bottom:0">
-          <div class="label">Date (JJ-MM-AAAA)</div>
-          <input id="f-date" class="form-input" type="text" placeholder="03-06-2026" value="${esc(extraction.date||"")}">
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <div class="label">Montant TTC (€)</div>
-          <input id="f-montant" class="form-input" type="text" value="${esc(extraction.montant||"")}">
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px">
-        <div class="label">Libellé / Intitulé</div>
-        <div style="display:flex;gap:6px;align-items:center">
-          <input id="f-libelle" class="form-input" type="text" value="${esc(extraction.libelle||"")}">
-        </div>
+      <div>
+        <div class="lbl-white">Montant TTC (€)</div>
+        <input class="form-input-lav" id="f-montant" type="number" step="0.01" value="${esc(extraction.montant)}" placeholder="0.00">
       </div>`;
+    fcard.append(row);
 
-    // Nom fichier preview
-    const ext = fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg";
-    fileData.ext = ext;
-    const fnDiv=mk("div","");fnDiv.style.marginBottom="12px";
-    fnDiv.innerHTML=`<div class="label">Nom du fichier Dropbox</div><div class="filename-preview" id="filename-preview">${buildFileName(ext)}</div>`;
-    fcard.append(fnDiv);
+    // Libellé
+    const g2=mk("div","form-group");g2.style.marginTop="10px";
+    g2.innerHTML=`<div class="lbl-white">Libellé</div>
+      <input class="form-input-lav" id="f-libelle" value="${esc(extraction.libelle)}" placeholder="Description courte">`;
+    fcard.append(g2);
 
-    // Mettre à jour le nom en temps réel
-    fcard.querySelectorAll(".form-input").forEach(i=>i.addEventListener("input",()=>{
-      extraction.fournisseur=document.getElementById("f-fournisseur")?.value||"";
-      extraction.date=document.getElementById("f-date")?.value||"";
-      extraction.montant=document.getElementById("f-montant")?.value||"";
-      extraction.libelle=document.getElementById("f-libelle")?.value||"";
-      const fp=document.getElementById("filename-preview");
-      if(fp) fp.textContent=buildFileName(ext);
-    }));
+    // Nom fichier
+    const fnbox=mk("div","");fnbox.style.marginBottom="14px";
+    fnbox.innerHTML=`<div class="lbl-white" style="margin-bottom:5px;">Nom du fichier Dropbox</div>
+      <div class="filename-box" id="filename-preview">${esc(buildFileName(fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg"))}</div>`;
+    fcard.append(fnbox);
 
-    // Ajouter bouton X sur le champ libellé
-    const libelleWrap = fcard.querySelector("#f-libelle").parentNode;
-    const btnX = document.createElement("button");
-    btnX.textContent = "✕";
-    btnX.style.cssText = "flex-shrink:0;width:36px;height:40px;border-radius:8px;border:1.5px solid #C8BFB5;background:#EAE4DC;font-size:18px;color:#6B7A8D;cursor:pointer";
-    btnX.onclick = () => {
-      const inp = document.getElementById("f-libelle");
-      if(inp) inp.value="";
-      extraction.libelle="";
-      const fp=document.getElementById("filename-preview");
-      if(fp) fp.textContent=buildFileName(ext);
-    };
-    libelleWrap.appendChild(btnX);
-
-    // Barre de progression pendant l'envoi
-  if(state==="sending") {
-    const ov=mk("div","upload-overlay");
-    ov.id="upload-overlay";
-    ov.innerHTML=`
-      <div class="upload-icon">📤</div>
-      <div class="upload-label">Envoi en cours…</div>
-      <div class="upload-step" id="upload-step">Préparation du fichier</div>
-      <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
-      <div class="progress-pct" id="progress-pct">0 %</div>`;
-    app.append(ov);
-    return;
-  }
-
-  const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
-    const sendBtn=mk("button","btn btn-green btn-full");
-    sendBtn.disabled=state==="sending";
-    sendBtn.textContent="📤 Valider et envoyer vers Dropbox";
-    sendBtn.onclick=validerEtEnvoyer;
-    const cancelBtn=mk("button","btn btn-soft");cancelBtn.textContent="Annuler";
-    cancelBtn.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
-    btns.append(sendBtn,cancelBtn);fcard.append(btns);
+    // UPLOAD PROGRESS
+    if(state==="sending") {
+      const ov=mk("div","");
+      ov.style.cssText="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:16px;text-align:center;";
+      ov.innerHTML=`
+        <div style="font-size:2rem;margin-bottom:8px;animation:pulse 1.2s ease-in-out infinite;">📤</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;margin-bottom:4px;">Envoi en cours…</div>
+        <div id="upload-step" style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px;">Préparation…</div>
+        <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+        <div id="progress-pct" style="font-size:11px;font-weight:800;color:#fff;margin-top:4px;">0 %</div>`;
+      fcard.append(ov);
+    } else {
+      // Boutons action
+      const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;";
+      const sendBtn=mk("button","btn btn-green");sendBtn.style.flex="1";
+      sendBtn.innerHTML="💾 &nbsp;Envoyer vers Dropbox";
+      sendBtn.onclick=validerEtEnvoyer;
+      const cancelBtn=mk("button","btn btn-ghost");
+      cancelBtn.innerHTML="✕";cancelBtn.title="Annuler";
+      cancelBtn.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
+      btns.append(sendBtn,cancelBtn);
+      fcard.append(btns);
+    }
     app.append(fcard);
   }
 }
 
 function renderListe(app) {
-  const card=mk("div","card",);
-  card.innerHTML=`<div class="label" style="margin-bottom:12px">Factures envoyées</div>`;
+  const count=factures.length;
 
-  if(!factures.length){
-    const em=mk("div","empty");em.textContent="Aucune facture envoyée pour l'instant";
+  const card=mk("div","card-white");
+
+  // Header
+  const hdr=mk("div","");hdr.style.cssText="display:flex;align-items:center;gap:10px;margin-bottom:14px;";
+  hdr.innerHTML=`
+    <div style="background:var(--lav-light);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.9rem;">📋</div>
+    <div>
+      <div class="section-label-dark">Historique</div>
+      <div style="font-size:.72rem;color:var(--grey);margin-top:1px;">${count} facture${count>1?"s":""} envoyée${count>1?"s":""}</div>
+    </div>`;
+  card.append(hdr);
+
+  if(!count) {
+    const em=mk("div","empty");
+    em.innerHTML=`<div class="empty-icon">📭</div><div class="empty-text">Aucune facture envoyée</div>`;
     card.append(em);
   } else {
     [...factures].reverse().forEach(f=>{
       const row=mk("div","facture-row");
       row.innerHTML=`
-        <div style="font-size:24px;flex-shrink:0">${f.type==="pdf"?"📄":"🖼️"}</div>
+        <div class="facture-icon">${f.type==="pdf"?"📄":"🖼️"}</div>
         <div class="facture-info">
           <div class="facture-nom">${esc(f.fournisseur)}</div>
           <div class="facture-meta">${esc(f.date)} · ${esc(f.libelle)}</div>
-          <div class="facture-meta" style="margin-top:2px;font-size:9px;color:var(--border)">${esc(f.filename)}</div>
+          <div class="facture-file">${esc(f.filename)}</div>
         </div>
-        <div>
+        <div style="text-align:right;flex-shrink:0;">
           <div class="facture-montant">${eur(f.montant)}</div>
-          <div style="text-align:right;margin-top:4px"><span class="badge-ok">✓ Dropbox</span></div>
+          <div><span class="badge-ok">✓ Dropbox</span></div>
         </div>`;
       card.append(row);
     });
   }
   app.append(card);
-  const note=mk("div","note");note.textContent="☁️ Les fichiers sont dans Dropbox → AB RENOV 35 / FACTURES VENTES / FACTURES A CLASSER";app.append(note);
+
+  const note=mk("div","note-box");
+  note.innerHTML="☁️ Dropbox → <strong>AB RENOV 35 / 1. FACTURES A CLASSER</strong>";
+  app.append(note);
 }
 
 // ── FICHIER ───────────────────────────────────────────────────────────────
 function onFile(input){if(input.files[0])handleFile(input.files[0]);}
-
 function handleFile(file) {
   const reader=new FileReader();
   reader.onload=e=>{
-    fileData={
-      dataUrl:e.target.result,
-      base64:e.target.result.split(",")[1],
-      mimeType:file.type||"image/jpeg",
-      name:file.name,
-      raw:file
-    };
+    fileData={dataUrl:e.target.result,base64:e.target.result.split(",")[1],mimeType:file.type||"image/jpeg",name:file.name,raw:file};
     extraction=null;state="idle";errMsg="";render();
   };
   reader.readAsDataURL(file);
@@ -366,16 +400,11 @@ function handleFile(file) {
 
 // ── ANALYSE IA ────────────────────────────────────────────────────────────
 async function extractPdfText(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
-  const pdf = await pdfjsLib.getDocument({data: bytes}).promise;
-  let text = "";
-  for(let p=1;p<=pdf.numPages;p++) {
-    const page = await pdf.getPage(p);
-    const content = await page.getTextContent();
-    text += content.items.map(i=>i.str).join(" ") + "\n";
-  }
+  const binary=atob(base64);const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+  let text="";
+  for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();text+=content.items.map(i=>i.str).join(" ")+"\n";}
   return text.trim();
 }
 
@@ -383,104 +412,62 @@ async function analyser() {
   state="loading";errMsg="";render();
   try {
     let body;
-    if(fileData.mimeType==="application/pdf") {
-      const text = await extractPdfText(fileData.base64);
-      body = JSON.stringify({text, mimeType: "text/plain"});
-    } else {
-      body = JSON.stringify({base64: fileData.base64, mimeType: fileData.mimeType});
-    }
-    const resp = await fetch(GAS_URL+"?method=ANALYSE", {
-      method:"POST",
-      redirect:"follow",
-      headers:{"Content-Type":"text/plain"},
-      body
-    });
-    const data = await resp.json();
-    if(data.error) throw new Error(data.error);
-    extraction = data;
-    state="extracted";
-  } catch(e) {
-    errMsg="Erreur d'analyse : "+e.message;
-    state="idle";
-  }
+    if(fileData.mimeType==="application/pdf"){const text=await extractPdfText(fileData.base64);body=JSON.stringify({text,mimeType:"text/plain"});}
+    else{body=JSON.stringify({base64:fileData.base64,mimeType:fileData.mimeType});}
+    const resp=await fetch(GAS_URL+"?method=ANALYSE",{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain"},body});
+    const data=await resp.json();
+    if(data.error)throw new Error(data.error);
+    extraction=data;state="extracted";
+  } catch(e){errMsg="Erreur d'analyse : "+e.message;state="idle";}
   render();
 }
 
-// ── VALIDATION + ENVOI DROPBOX ────────────────────────────────────────────
+// ── ENVOI DROPBOX ─────────────────────────────────────────────────────────
 async function validerEtEnvoyer() {
   extraction.fournisseur=document.getElementById("f-fournisseur")?.value.trim()||extraction.fournisseur;
   extraction.date=document.getElementById("f-date")?.value.trim()||extraction.date;
   extraction.montant=document.getElementById("f-montant")?.value.trim()||extraction.montant;
   const libelleEl=document.getElementById("f-libelle");
-  if(libelleEl) extraction.libelle=libelleEl.value.trim();
-
+  if(libelleEl)extraction.libelle=libelleEl.value.trim();
   if(!extraction.fournisseur||!extraction.montant){errMsg="Fournisseur et montant obligatoires";render();return;}
 
   state="sending";errMsg="";render();
-
   const ext=fileData.mimeType==="application/pdf"?"pdf":fileData.mimeType.split("/")[1]||"jpg";
   fileData.ext=ext;
   const filename=buildFileName(ext);
 
-  function setProgress(pct, step) {
+  function setProgress(pct,step){
     const bar=document.getElementById("progress-bar");
     const pctEl=document.getElementById("progress-pct");
     const stepEl=document.getElementById("upload-step");
-    if(bar) bar.style.width=pct+"%";
-    if(pctEl) pctEl.textContent=pct+" %";
-    if(stepEl) stepEl.textContent=step;
+    if(bar)bar.style.width=pct+"%";
+    if(pctEl)pctEl.textContent=pct+" %";
+    if(stepEl)stepEl.textContent=step;
   }
 
   try {
-    setProgress(15, "Connexion à Dropbox…");
-    await new Promise(r=>setTimeout(r,300));
-    setProgress(35, "Envoi du fichier…");
-
-    // Upload Dropbox via GAS
-    const upResp = await fetch(GAS_URL+"?method=UPLOAD", {
-      method:"POST", redirect:"follow",
-      headers:{"Content-Type":"text/plain"},
-      body: JSON.stringify({base64: fileData.base64, filename})
-    });
-    setProgress(75, "Enregistrement en cours…");
-    const upData = await upResp.json();
-    if(upData.error) throw new Error(upData.error);
-    setProgress(90, "Sauvegarde dans le tableau…");
-
-    const entry={
-      id:Date.now().toString(),
-      fournisseur:extraction.fournisseur,
-      date:extraction.date,
-      libelle:extraction.libelle,
-      montant:extraction.montant,
-      filename,
-      type:ext,
-      dropboxPath:upData.path||DROPBOX_FOLDER+"/"+filename,
-      ts:new Date().toISOString()
-    };
-
-    setProgress(100, "✅ Fichier bien reçu dans Dropbox !");
+    setProgress(15,"Connexion à Dropbox…");await new Promise(r=>setTimeout(r,300));
+    setProgress(35,"Envoi du fichier…");
+    const upResp=await fetch(GAS_URL+"?method=UPLOAD",{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain"},body:JSON.stringify({base64:fileData.base64,filename})});
+    setProgress(75,"Enregistrement…");
+    const upData=await upResp.json();
+    if(upData.error)throw new Error(upData.error);
+    setProgress(90,"Sauvegarde dans le tableau…");
+    const entry={id:Date.now().toString(),fournisseur:extraction.fournisseur,date:extraction.date,libelle:extraction.libelle,montant:extraction.montant,filename,type:ext,dropboxPath:upData.path||DROPBOX_FOLDER+"/"+filename,ts:new Date().toISOString()};
+    await fetch(GAS_URL+"?method=SAVE",{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain"},body:JSON.stringify(entry)});
+    setProgress(100,"✅ Reçu dans Dropbox !");
     await new Promise(r=>setTimeout(r,500));
-    factures.push(entry);
-    state="sent";
-  } catch(e) {
-    errMsg="Erreur envoi : "+e.message;
-    state="extracted";
-  }
+    factures.push(entry);state="sent";
+  } catch(e){errMsg="Erreur envoi : "+e.message;state="extracted";}
   render();
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 async function init() {
-  try {
-    const r = await fetch(GAS_URL+"?method=GET", {redirect:"follow"});
-    const data = await r.json();
-    if(Array.isArray(data)) factures = data;
-  } catch(e) {}
+  try{const r=await fetch(GAS_URL+"?method=GET",{redirect:"follow"});const data=await r.json();if(Array.isArray(data))factures=data;}catch(e){}
   render();
 }
 init();
 </script>
 </body>
 </html>
-
