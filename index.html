@@ -86,6 +86,16 @@ input,select,textarea{font-family:inherit;}
 .note{font-size:11px;color:var(--muted);text-align:center;padding:8px;}
 .err{background:#FDECEA;border:1px solid #F5C6C2;border-radius:10px;padding:12px;font-size:12px;color:#C0392B;margin-bottom:8px;}
 .success-banner{background:var(--green-light);border:1px solid #A8D5BC;border-radius:10px;padding:14px;font-size:13px;color:var(--green);font-weight:700;text-align:center;}
+
+/* BARRE DE PROGRESSION UPLOAD */
+.upload-overlay{background:var(--white);border:2px solid var(--navy);border-radius:12px;padding:24px 20px;text-align:center;}
+.upload-icon{font-size:36px;margin-bottom:12px;animation:pulse 1.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:.7;}}
+.upload-label{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.upload-step{font-size:11px;color:var(--muted);margin-bottom:16px;min-height:16px;}
+.progress-track{background:var(--bgsoft);border-radius:99px;height:8px;overflow:hidden;margin-bottom:8px;}
+.progress-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lavande),var(--navy));transition:width .4s ease;width:0%;}
+.progress-pct{font-size:11px;font-weight:800;color:var(--navy);}
 </style>
 </head>
 <body>
@@ -282,10 +292,24 @@ function renderImport(app) {
     };
     libelleWrap.appendChild(btnX);
 
-    const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
+    // Barre de progression pendant l'envoi
+  if(state==="sending") {
+    const ov=mk("div","upload-overlay");
+    ov.id="upload-overlay";
+    ov.innerHTML=`
+      <div class="upload-icon">📤</div>
+      <div class="upload-label">Envoi en cours…</div>
+      <div class="upload-step" id="upload-step">Préparation du fichier</div>
+      <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+      <div class="progress-pct" id="progress-pct">0 %</div>`;
+    app.append(ov);
+    return;
+  }
+
+  const btns=mk("div","");btns.style.cssText="display:flex;gap:8px;margin-top:4px";
     const sendBtn=mk("button","btn btn-green btn-full");
     sendBtn.disabled=state==="sending";
-    sendBtn.textContent=state==="sending"?"Envoi en cours…":"📤 Valider et envoyer vers Dropbox";
+    sendBtn.textContent="📤 Valider et envoyer vers Dropbox";
     sendBtn.onclick=validerEtEnvoyer;
     const cancelBtn=mk("button","btn btn-soft");cancelBtn.textContent="Annuler";
     cancelBtn.onclick=()=>{fileData=null;extraction=null;state="idle";render();};
@@ -398,15 +422,30 @@ async function validerEtEnvoyer() {
   fileData.ext=ext;
   const filename=buildFileName(ext);
 
+  function setProgress(pct, step) {
+    const bar=document.getElementById("progress-bar");
+    const pctEl=document.getElementById("progress-pct");
+    const stepEl=document.getElementById("upload-step");
+    if(bar) bar.style.width=pct+"%";
+    if(pctEl) pctEl.textContent=pct+" %";
+    if(stepEl) stepEl.textContent=step;
+  }
+
   try {
+    setProgress(15, "Connexion à Dropbox…");
+    await new Promise(r=>setTimeout(r,300));
+    setProgress(35, "Envoi du fichier…");
+
     // Upload Dropbox via GAS
     const upResp = await fetch(GAS_URL+"?method=UPLOAD", {
       method:"POST", redirect:"follow",
       headers:{"Content-Type":"text/plain"},
       body: JSON.stringify({base64: fileData.base64, filename})
     });
+    setProgress(75, "Enregistrement en cours…");
     const upData = await upResp.json();
     if(upData.error) throw new Error(upData.error);
+    setProgress(90, "Sauvegarde dans le tableau…");
 
     const entry={
       id:Date.now().toString(),
@@ -420,6 +459,8 @@ async function validerEtEnvoyer() {
       ts:new Date().toISOString()
     };
 
+    setProgress(100, "✅ Fichier bien reçu dans Dropbox !");
+    await new Promise(r=>setTimeout(r,500));
     factures.push(entry);
     state="sent";
   } catch(e) {
@@ -442,3 +483,4 @@ init();
 </script>
 </body>
 </html>
+
