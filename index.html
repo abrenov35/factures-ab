@@ -41,12 +41,14 @@ input,select,textarea{font-family:inherit;}
 .lbl-grey{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:5px;}
 
 /* DROP ZONE */
-.drop-zone{border:2px dashed rgba(164,149,195,.4);border-radius:16px;padding:36px 16px 28px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.06);}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--lav);background:rgba(164,149,195,.14);}
-.drop-icon{font-size:52px;margin-bottom:14px;line-height:1;display:block;}
-.drop-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;margin-bottom:6px;}
-.drop-sub{font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.02em;}
-.drop-btns{display:flex;flex-direction:column;gap:10px;margin-top:22px;}
+.drop-hero{padding:32px 16px 0;text-align:center;}
+.drop-hero-icon{font-size:56px;line-height:1;margin-bottom:16px;}
+.drop-hero-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:6px;}
+.drop-hero-sub{font-size:12px;color:var(--grey);letter-spacing:.04em;}
+.drop-zone{border:2px dashed var(--border);border-radius:14px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--white);margin:20px 0 0;}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--lav);background:var(--lav-light);}
+.drop-zone-label{font-size:12px;color:var(--grey);margin-bottom:14px;}
+.drop-btns{display:flex;flex-direction:column;gap:10px;}
 
 /* PREVIEW */
 .preview-wrap{border-radius:10px;overflow:hidden;background:#000;max-height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
@@ -183,28 +185,27 @@ function renderImport(app) {
 
   // ZONE IMPORT — pas de fichier
   if(!fileData) {
-    const card=mk("div","card-navy");
+    const card=mk("div","");
     card.innerHTML=`
-      <div style="text-align:center;padding:10px 0 20px;">
-        <div style="font-size:3rem;line-height:1;margin-bottom:14px;">🧾</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;line-height:1.1;">Factures &amp; Notes</div>
-        <div style="font-size:11px;color:rgba(164,149,195,.8);letter-spacing:.12em;text-transform:uppercase;margin-top:6px;font-weight:600;">Classement automatique Dropbox</div>
+      <div class="drop-hero">
+        <div class="drop-hero-icon">🧾</div>
+        <div class="drop-hero-title">Factures &amp; Notes</div>
+        <div class="drop-hero-sub">Classement automatique vers Dropbox</div>
       </div>
       <div class="drop-zone" id="drop-zone">
-        <div class="drop-title">Déposer un document</div>
-        <div class="drop-sub">Photo · PDF · Ticket · Note de frais</div>
+        <div class="drop-zone-label">📎 Glisser un fichier ici ou choisir</div>
         <div class="drop-btns">
-          <label class="btn btn-lav btn-full" style="cursor:pointer;height:46px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;">
-            📷 Prendre une photo
+          <label class="btn btn-lav btn-full" style="cursor:pointer;height:48px;font-size:13px;">
+            📷 &nbsp;Prendre une photo
             <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFile(this)">
           </label>
-          <label class="btn btn-ghost btn-full" style="cursor:pointer;height:46px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;">
-            📁 Choisir un fichier
+          <label class="btn btn-navy btn-full" style="cursor:pointer;height:48px;font-size:13px;">
+            📁 &nbsp;Choisir un fichier
             <input type="file" accept=".pdf,.png,.jpg,.jpeg,image/*" style="display:none" onchange="onFile(this)">
           </label>
         </div>
       </div>
-      <div style="text-align:center;margin-top:14px;font-size:10px;color:rgba(255,255,255,.22);letter-spacing:.08em;text-transform:uppercase;">☁️ AB RENOV 35 · FACTURES A CLASSER</div>`;
+      <div style="text-align:center;margin-top:16px;font-size:10px;color:var(--grey);letter-spacing:.08em;text-transform:uppercase;">☁️ AB RENOV 35 · FACTURES A CLASSER</div>`;
     // Drag & drop
     const dz=card.querySelector("#drop-zone");
     dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag");});
