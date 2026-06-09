@@ -131,8 +131,7 @@ input,select,textarea{font-family:inherit;}
 
 <div id="tabs-bar">
   <div id="tabs-inner">
-    <button class="tab-btn active" onclick="switchTab('import')">📤 Importer</button>
-    <button class="tab-btn" onclick="switchTab('liste')">📋 Historique</button>
+    <button class="tab-btn active">📤 Importer</button>
   </div>
 </div>
 
@@ -142,10 +141,8 @@ input,select,textarea{font-family:inherit;}
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz4qXrt7QZbV0Yb5spXaBtb2nhdRPE7nXYRAyxs78E5NkJpzDDkgog7yxv6TBzqX1yp/exec";
 const DROPBOX_FOLDER = "/AB RENOV 35/1. FACTURES A CLASSER";
 
-let tab = "import";
 let fileData = null;
 let extraction = null;
-let factures = [];
 let state = "idle";
 let errMsg = "";
 
@@ -164,18 +161,11 @@ function buildFileName(ext) {
   return `${f}${d}${l}-${m}.${ext}`;
 }
 
-function switchTab(t) {
-  tab = t;
-  document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active", (t==="import"&&i===0)||(t==="liste"&&i===1)));
-  render();
-}
-
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render() {
   const app = document.getElementById("app");
   app.innerHTML = "";
-  if(tab==="import") renderImport(app);
-  else renderListe(app);
+  renderImport(app);
 }
 
 function renderImport(app) {
@@ -344,49 +334,6 @@ function renderImport(app) {
   }
 }
 
-function renderListe(app) {
-  const count=factures.length;
-
-  const card=mk("div","card-white");
-
-  // Header
-  const hdr=mk("div","");hdr.style.cssText="display:flex;align-items:center;gap:10px;margin-bottom:14px;";
-  hdr.innerHTML=`
-    <div style="background:var(--lav-light);border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.9rem;">📋</div>
-    <div>
-      <div class="section-label-dark">Historique</div>
-      <div style="font-size:.72rem;color:var(--grey);margin-top:1px;">${count} facture${count>1?"s":""} envoyée${count>1?"s":""}</div>
-    </div>`;
-  card.append(hdr);
-
-  if(!count) {
-    const em=mk("div","empty");
-    em.innerHTML=`<div class="empty-icon">📭</div><div class="empty-text">Aucune facture envoyée</div>`;
-    card.append(em);
-  } else {
-    [...factures].reverse().forEach(f=>{
-      const row=mk("div","facture-row");
-      row.innerHTML=`
-        <div class="facture-icon">${f.type==="pdf"?"📄":"🖼️"}</div>
-        <div class="facture-info">
-          <div class="facture-nom">${esc(f.fournisseur)}</div>
-          <div class="facture-meta">${esc(f.date)} · ${esc(f.libelle)}</div>
-          <div class="facture-file">${esc(f.filename)}</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0;">
-          <div class="facture-montant">${eur(f.montant)}</div>
-          <div><span class="badge-ok">✓ Dropbox</span></div>
-        </div>`;
-      card.append(row);
-    });
-  }
-  app.append(card);
-
-  const note=mk("div","note-box");
-  note.innerHTML="☁️ Dropbox → <strong>AB RENOV 35 / 1. FACTURES A CLASSER</strong>";
-  app.append(note);
-}
-
 // ── FICHIER ───────────────────────────────────────────────────────────────
 function onFile(input){if(input.files[0])handleFile(input.files[0]);}
 function handleFile(file) {
@@ -463,10 +410,7 @@ async function validerEtEnvoyer() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-async function init() {
-  try{const r=await fetch(GAS_URL+"?method=GET",{redirect:"follow"});const data=await r.json();if(Array.isArray(data))factures=data;}catch(e){}
-  render();
-}
+function init() { render(); }
 init();
 </script>
 </body>
