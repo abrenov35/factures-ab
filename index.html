@@ -28,17 +28,11 @@ input,select,textarea{font-family:inherit;}
 .logo-sub{font-size:9px;color:var(--lav);letter-spacing:2.5px;font-weight:700;text-transform:uppercase;margin-top:2px;}
 #header-bar{height:3px;background:linear-gradient(90deg,var(--lav),var(--lav-dark),var(--navy));}
 
-/* TABS */
-#tabs-bar{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:54px;z-index:99;}
-#tabs-inner{max-width:560px;margin:0 auto;display:flex;}
-.tab-btn{flex:1;padding:10px 8px;border:none;background:transparent;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--grey);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;}
-.tab-btn.active{color:var(--navy);border-bottom-color:var(--lav);}
-
 /* MAIN */
 #app{max-width:560px;margin:0 auto;padding:10px 12px 30px;}
 
 /* CARDS */
-.card-navy{background:var(--navy);border-radius:12px;padding:14px 14px;margin-bottom:10px;box-shadow:0 6px 20px rgba(22,45,73,.2);}
+.card-navy{background:var(--navy);border-radius:16px;padding:20px 16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(22,45,73,.2);}
 .card-white{background:var(--white);border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(22,45,73,.07);border:1.5px solid var(--border);}
 
 /* LABELS */
@@ -47,12 +41,12 @@ input,select,textarea{font-family:inherit;}
 .lbl-grey{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-bottom:5px;}
 
 /* DROP ZONE */
-.drop-zone{border:2px dashed #A8C4E0;border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;background:#D6E8F5;}
-.drop-zone:hover,.drop-zone.drag{border-color:var(--lav);background:var(--lav-light);}
-.drop-icon{font-size:32px;margin-bottom:8px;}
-.drop-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:4px;}
-.drop-sub{font-size:11px;color:var(--grey);}
-.drop-btns{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.drop-zone{border:2px dashed rgba(164,149,195,.4);border-radius:16px;padding:36px 16px 28px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.06);}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--lav);background:rgba(164,149,195,.14);}
+.drop-icon{font-size:52px;margin-bottom:14px;line-height:1;display:block;}
+.drop-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;margin-bottom:6px;}
+.drop-sub{font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.02em;}
+.drop-btns{display:flex;flex-direction:column;gap:10px;margin-top:22px;}
 
 /* PREVIEW */
 .preview-wrap{border-radius:10px;overflow:hidden;background:#000;max-height:220px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
@@ -129,12 +123,6 @@ input,select,textarea{font-family:inherit;}
   <div id="header-bar"></div>
 </div>
 
-<div id="tabs-bar">
-  <div id="tabs-inner">
-    <button class="tab-btn active">📤 Importer</button>
-  </div>
-</div>
-
 <div id="app"></div>
 
 <script>
@@ -197,25 +185,26 @@ function renderImport(app) {
   if(!fileData) {
     const card=mk("div","card-navy");
     card.innerHTML=`
-      <div class="section-title">
-        <div class="section-icon">📤</div>
-        <div class="section-label">Importer une facture</div>
+      <div style="text-align:center;padding:10px 0 20px;">
+        <div style="font-size:3rem;line-height:1;margin-bottom:14px;">🧾</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;line-height:1.1;">Factures &amp; Notes</div>
+        <div style="font-size:11px;color:rgba(164,149,195,.8);letter-spacing:.12em;text-transform:uppercase;margin-top:6px;font-weight:600;">Classement automatique Dropbox</div>
       </div>
       <div class="drop-zone" id="drop-zone">
-        <div class="drop-icon">🧾</div>
-        <div class="drop-title">Photo ou PDF</div>
-        <div class="drop-sub">Facture, ticket, note de frais</div>
+        <div class="drop-title">Déposer un document</div>
+        <div class="drop-sub">Photo · PDF · Ticket · Note de frais</div>
         <div class="drop-btns">
-          <label class="btn btn-lav" style="cursor:pointer;">
+          <label class="btn btn-lav btn-full" style="cursor:pointer;height:46px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;">
             📷 Prendre une photo
             <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFile(this)">
           </label>
-          <label class="btn btn-ghost" style="cursor:pointer;">
+          <label class="btn btn-ghost btn-full" style="cursor:pointer;height:46px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;">
             📁 Choisir un fichier
             <input type="file" accept=".pdf,.png,.jpg,.jpeg,image/*" style="display:none" onchange="onFile(this)">
           </label>
         </div>
-      </div>`;
+      </div>
+      <div style="text-align:center;margin-top:14px;font-size:10px;color:rgba(255,255,255,.22);letter-spacing:.08em;text-transform:uppercase;">☁️ AB RENOV 35 · FACTURES A CLASSER</div>`;
     // Drag & drop
     const dz=card.querySelector("#drop-zone");
     dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag");});
