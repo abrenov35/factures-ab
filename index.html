@@ -234,7 +234,7 @@ function renderImport(app) {
     previewCard.append(pw);
   } else {
     const wrap=mk("div","");
-    wrap.style.cssText="background:#fff;border-radius:8px;overflow:hidden;margin-bottom:12px;max-height:260px;display:flex;align-items:flex-start;justify-content:center;";
+    wrap.style.cssText="background:#fff;border-radius:8px;overflow:auto;margin-bottom:12px;max-height:420px;display:flex;align-items:flex-start;justify-content:center;";
     const canvas=mk("canvas");canvas.id="pdf-preview-canvas";canvas.style.cssText="max-width:100%;display:block;";
     wrap.append(canvas);
     previewCard.append(wrap);
@@ -243,7 +243,7 @@ function renderImport(app) {
         const bin=atob(fileData.base64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
         const pdf=await pdfjsLib.getDocument({data:arr}).promise;
         const page=await pdf.getPage(1);
-        const vp=page.getViewport({scale:1.2});
+        const vp=page.getViewport({scale:1.5});
         canvas.width=vp.width;canvas.height=vp.height;
         await page.render({canvasContext:canvas.getContext("2d"),viewport:vp}).promise;
       }catch(e){wrap.innerHTML='<div style="padding:12px;text-align:center;font-size:13px;color:#888;">📄 PDF chargé</div>';}
