@@ -394,7 +394,7 @@ async function validerEtEnvoyer() {
     await fetch(GAS_URL+"?method=SAVE",{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain"},body:JSON.stringify(entry)});
     setProgress(100,"✅ Reçu dans Dropbox !");
     await new Promise(r=>setTimeout(r,500));
-    factures.push(entry);state="sent";
+    state="sent";
   } catch(e){errMsg="Erreur envoi : "+e.message;state="extracted";}
   render();
 }
